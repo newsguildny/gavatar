@@ -1,1 +1,3 @@
-# gavatar
+# guild avatar
+
+run locally: `./run`
