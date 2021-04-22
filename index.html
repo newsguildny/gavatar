@@ -54,8 +54,8 @@
         // set the the canvas to the resulting image size (a square)
         canvas.width = dimension;
         canvas.height = dimension;
-        
-        // if the image is in landscape mode (aspectRatio > 1) it will overflow horizontally, 
+
+        // if the image is in landscape mode (aspectRatio > 1) it will overflow horizontally,
         // if it's in portrait mode it will overflow vertically.
         const aspectRatio = profilePic.width / profilePic.height;
         const [profilePicW, profilePicH] =
@@ -63,8 +63,10 @@
             ? [dimension * aspectRatio, dimension] // scale width outside dimension
             : [dimension, dimension / aspectRatio]; // scale height outside dimension
 
-        // draw the image to the canvas starting in the top left corner (todo: center the image in the canvas)
-        context.drawImage(profilePic, 0, 0, profilePicW, profilePicH);
+        // draw the picture at the center of the canvas
+        const x = (dimension - profilePicW) / 2;
+        const y = (dimension - profilePicH) / 2;
+        context.drawImage(profilePic, x, y, profilePicW, profilePicH);
 
         context.drawImage(frame, 0, 0, dimension, dimension);
 
