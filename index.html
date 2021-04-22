@@ -7,14 +7,19 @@
     <style>
       body {
         font-size: 20px;
-        margin-top: 10px;
-        margin-bottom: 10px;
+        margin-top: 20px;
+        margin-bottom: 20px;
       }
       img {
         max-width: 100%;
         max-height: 100%;
-        margin-top: 10px;
-        margin-bottom: 10px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        display: block;
+      }
+      #main {
+        max-width: 1024px;
+        margin: 0 auto;
       }
     </style>
   </head>
@@ -27,7 +32,20 @@
 
     <script>
       // add more frames here as they become availible
-      const frames = ["/frame.png"];
+      const frames = [
+        "/frames/round-1.png",
+        "/frames/round-2.png",
+        "/frames/round-tile-1.png",
+        "/frames/round-tile-2.png",
+        "/frames/round-tile-3.png",
+        "/frames/round-tile-4.png",
+        "/frames/square-1.png",
+        "/frames/square-2.png",
+        "/frames/square-tile-1.png",
+        "/frames/square-tile-2.png",
+        "/frames/square-tile-3.png",
+        "/frames/square-tile-4.png",
+      ];
 
       const loadImage = (src) =>
         new Promise((resolve, reject) => {
@@ -77,12 +95,15 @@
 
       document.getElementById("inp").onchange = async ({ target }) => {
         try {
+          const mainEl = document.getElementById("main");
+
+          mainEl.innerHTML = "Loading...";
+
           const profilePicUrl = URL.createObjectURL(target.files[0]);
 
           const profilePic = await loadImage(profilePicUrl);
           const framePics = await Promise.all(framePromises);
 
-          const mainEl = document.getElementById("main");
           mainEl.innerHTML = "";
 
           // render each frame over the profile pic
