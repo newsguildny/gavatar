@@ -11,11 +11,23 @@
 <body>
     <div id="main">
         <div class="input">
-            <p>Select your prefered profile pic</p>
+            <div id="uploaded-frame"></div>
+            <button id="inp-button">upload an image</button>
             <input type="file" id="inp" />
         </div>
-        <div id="frames">
-
+        <div id="frames" class="default-frames">
+            <img src="/frames/round-1.png">
+            <img src="/frames/round-2.png">
+            <img src="/frames/round-tile-1.png">
+            <img src="/frames/round-tile-2.png">
+            <img src="/frames/round-tile-3.png">
+            <img src="/frames/round-tile-4.png">
+            <img src="/frames/square-1.png">
+            <img src="/frames/square-2.png">
+            <img src="/frames/square-tile-1.png">
+            <img src="/frames/square-tile-2.png">
+            <img src="/frames/square-tile-3.png">
+            <img src="/frames/square-tile-4.png">
         </div>
     </div>
 
@@ -82,6 +94,12 @@
 
         const framePromises = frames.map(loadImage);
 
+        const uploadBtn = document.getElementById("inp-button");
+
+        uploadBtn.addEventListener('click', () => {
+            document.getElementById("inp").click()
+        })
+
         document.getElementById("inp").onchange = async({
             target
         }) => {
@@ -93,15 +111,21 @@
                 const profilePicUrl = URL.createObjectURL(target.files[0]);
 
                 const profilePic = await loadImage(profilePicUrl);
+                console.log(profilePic);
+                const uploadedFrame = document.getElementById('uploaded-frame');
+                uploadedFrame.innerHTML = '';
+                uploadedFrame.appendChild(profilePic);
                 const framePics = await Promise.all(framePromises);
 
                 frameEl.innerHTML = "";
+                frameEl.classList.remove('default-frames');
 
                 // render each frame over the profile pic
                 framePics.forEach((framePic) => {
                     const imgEl = render(profilePic, framePic);
                     frameEl.appendChild(imgEl);
                 });
+                uploadBtn.innerText = "change photo";
             } catch (err) {
                 console.log(err);
             }
