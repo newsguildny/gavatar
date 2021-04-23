@@ -2,4 +2,4 @@
 
 run locally: `./run`
 
-http://guild-avatar.surge.sh/
+the tool is manually deployed to [surge](https://surge.sh/) on olovs account. 
