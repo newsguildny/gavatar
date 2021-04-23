@@ -1,4 +1,4 @@
-# guild avatar
+# guild avatar generator
 
 run locally: `./run`
 
