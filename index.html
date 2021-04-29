@@ -84,8 +84,10 @@
             const y = (dimension - profilePicH) / 2;
             context.drawImage(profilePic, x, y, profilePicW, profilePicH);
 
-            // draw frame
-            context.drawImage(framePic, 0, 0, dimension, dimension);
+            // draw frame (if there is one)
+            if (framePic) {
+                context.drawImage(framePic, 0, 0, dimension, dimension);
+            }
 
             const imgEl = document.createElement("img");
             imgEl.src = canvas.toDataURL("image/png");
@@ -105,16 +107,15 @@
         }) => {
             try {
                 const frameEl = document.getElementById("frames");
+                const uploadedFrameEl = document.getElementById('uploaded-frame');
 
                 frameEl.innerHTML = "Loading...";
+                uploadedFrameEl.innerHTML = '';
 
                 const profilePicUrl = URL.createObjectURL(target.files[0]);
-
                 const profilePic = await loadImage(profilePicUrl);
-                console.log(profilePic);
-                const uploadedFrame = document.getElementById('uploaded-frame');
-                uploadedFrame.innerHTML = '';
-                uploadedFrame.appendChild(profilePic);
+                                
+                uploadedFrameEl.appendChild(render(profilePic));
                 const framePics = await Promise.all(framePromises);
 
                 frameEl.innerHTML = "";
