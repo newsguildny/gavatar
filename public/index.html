@@ -94,6 +94,21 @@
             return imgEl;
         }
 
+        async function loadImageManifest() {
+            const res = await fetch('./images.txt')
+            const text = await res.text()
+            const array = text.split('\n')
+                .map(fileName => {
+                    return `/${fileName.trim}`
+                }).filter(fileName => {
+
+            });
+
+            return array;
+        }
+
+        loadImageManifest();
+
         const framePromises = frames.map(loadImage);
 
         const uploadBtn = document.getElementById("inp-button");
