@@ -97,19 +97,20 @@
         async function loadImageManifest() {
             const res = await fetch('./images.txt')
             const text = await res.text()
-            const array = text.split('\n')
-                .map(fileName => {
-                    return `/${fileName.trim}`
-                }).filter(fileName => {
-
-            });
+            
+            // parse a line seperated text file into an
+            // array of image paths
+            const array = text
+                .split('\n')
+                .map(f => `/${f.trim()}`)
+                .filter(f => f.endsWith('.png'))
 
             return array;
         }
 
-        loadImageManifest();
-
-        const framePromises = frames.map(loadImage);
+        const framePromises = loadImageManifest().then((imageUrls) =>
+            imageUrls.map((url) => loadImage)
+        );
 
         const uploadBtn = document.getElementById("inp-button");
 
