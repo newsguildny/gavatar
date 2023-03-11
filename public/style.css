@@ -16,7 +16,7 @@ body {
     justify-content: space-between;
     margin: 0 auto;
     max-width: 1112px;
-    padding: 0 2rem;
+    padding: 0.75rem 2rem;
 }
 
 img {
@@ -53,7 +53,6 @@ button:hover {
 .input {
     box-sizing: content-box;
     left: 0;
-    max-height: 400px;
     padding-right: 1rem;
     position: sticky;
     text-align: center;
@@ -102,7 +101,6 @@ button:hover {
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-between;
-    padding-top: 0.75rem;
     position: relative;
     width: 66.66%;
 }
