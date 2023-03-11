@@ -11,8 +11,6 @@ commands
 --------
 make dev           run local dev server
 make build         generate the image manifest
-make deploy        build and deploy the site to production
-make deploy-stg    build and deploy to staging
 
 environments
 ------------
