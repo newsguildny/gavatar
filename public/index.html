@@ -14,39 +14,10 @@
         <button id="inp-button">upload an image</button>
         <input type="file" id="inp" />
       </div>
-      <div id="frames" class="default-frames">
-        <img src="/frames/round-1.png" />
-        <img src="/frames/round-2.png" />
-        <img src="/frames/round-tile-1.png" />
-        <img src="/frames/round-tile-2.png" />
-        <img src="/frames/round-tile-3.png" />
-        <img src="/frames/round-tile-4.png" />
-        <img src="/frames/square-1.png" />
-        <img src="/frames/square-2.png" />
-        <img src="/frames/square-tile-1.png" />
-        <img src="/frames/square-tile-2.png" />
-        <img src="/frames/square-tile-3.png" />
-        <img src="/frames/square-tile-4.png" />
-      </div>
+      <div id="frames" class="default-frames"></div>
     </div>
 
     <script>
-      // add more frames here as they become availible
-      const frames = [
-        "/frames/round-1.png",
-        "/frames/round-2.png",
-        "/frames/round-tile-1.png",
-        "/frames/round-tile-2.png",
-        "/frames/round-tile-3.png",
-        "/frames/round-tile-4.png",
-        "/frames/square-1.png",
-        "/frames/square-2.png",
-        "/frames/square-tile-1.png",
-        "/frames/square-tile-2.png",
-        "/frames/square-tile-3.png",
-        "/frames/square-tile-4.png",
-      ];
-
       const loadImage = (src) =>
         new Promise((resolve, reject) => {
           const image = new Image();
@@ -63,7 +34,7 @@
         // array of image paths
         const array = text
           .split("\n")
-          .map((f) => `/${f.trim()}`)
+          .map((f) => `/frames/${f.trim()}`)
           .filter((f) => f.endsWith(".png"));
 
         return array;
@@ -107,43 +78,45 @@
         return imgEl;
       }
 
-      const framePromises = loadImageManifest().then((imageUrls) =>
-        imageUrls.map((url) => loadImage)
-      );
+      window.addEventListener("DOMContentLoaded", async () => {
+        const frameUrls = await loadImageManifest();
+        const framePics = await Promise.all(frameUrls.map(loadImage));
 
-      const uploadBtn = document.getElementById("inp-button");
+        const uploadBtn = document.getElementById("inp-button");
+        const frameEl = document.getElementById("frames");
+        const uploadedFrameEl = document.getElementById("uploaded-frame");
 
-      uploadBtn.addEventListener("click", () => {
-        document.getElementById("inp").click();
+        // render initial gallery of empty frames
+        framePics.forEach((framePic) => frameEl.appendChild(framePic));
+
+        uploadBtn.addEventListener("click", () => {
+          document.getElementById("inp").click();
+        });
+
+        document.getElementById("inp").onchange = async ({ target }) => {
+          try {
+            frameEl.innerHTML = "Loading...";
+            uploadedFrameEl.innerHTML = "";
+
+            const profilePicUrl = URL.createObjectURL(target.files[0]);
+            const profilePic = await loadImage(profilePicUrl);
+
+            uploadedFrameEl.appendChild(render(profilePic));
+
+            frameEl.innerHTML = "";
+            frameEl.classList.remove("default-frames");
+
+            // render each frame over the profile pic
+            framePics.forEach((framePic) => {
+              const imgEl = render(profilePic, framePic);
+              frameEl.appendChild(imgEl);
+            });
+            uploadBtn.innerText = "change photo";
+          } catch (err) {
+            console.log(err);
+          }
+        };
       });
-
-      document.getElementById("inp").onchange = async ({ target }) => {
-        try {
-          const frameEl = document.getElementById("frames");
-          const uploadedFrameEl = document.getElementById("uploaded-frame");
-
-          frameEl.innerHTML = "Loading...";
-          uploadedFrameEl.innerHTML = "";
-
-          const profilePicUrl = URL.createObjectURL(target.files[0]);
-          const profilePic = await loadImage(profilePicUrl);
-
-          uploadedFrameEl.appendChild(render(profilePic));
-          const framePics = await Promise.all(framePromises);
-
-          frameEl.innerHTML = "";
-          frameEl.classList.remove("default-frames");
-
-          // render each frame over the profile pic
-          framePics.forEach((framePic) => {
-            const imgEl = render(profilePic, framePic);
-            frameEl.appendChild(imgEl);
-          });
-          uploadBtn.innerText = "change photo";
-        } catch (err) {
-          console.log(err);
-        }
-      };
     </script>
   </body>
 </html>
