@@ -10,7 +10,7 @@ adding a frame
 
 commands
 --------
-make dev           run local dev server
+make dev           run local dev server at port 8000
 make build         generate the image manifest
 
 releases
