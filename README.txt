@@ -15,13 +15,13 @@ make deploy-stg    build and deploy to staging
 
 environments
 ------------
-guild-avatar.surge.sh        production
-guild-avatar-stg.surge.sh    staging
+production         https://guild-avatar.surge.sh       
+staging            https://guild-avatar-stg.surge.sh   
 
 troubleshooting
 ---------------
-- verify the sha-1 and the timestamp at https://surge-stg.sh/version.txt
-- verify that the correct images are included in https://surge-stg.sh/images.txt
+- verify the sha-1 and the timestamp at https://guild-avatar.surge.sh/version.txt
+- verify that the correct images are included in https://guild-avatar.surge.sh/images.txt
 
 
 ෴෴෴෴෴෴෴෴෴
