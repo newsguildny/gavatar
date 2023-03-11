@@ -14,3 +14,6 @@ dev: build
 
 deploy: build
 	surge public guild-avatar.surge.sh
+
+deploy-stg: build
+	surge public guild-avatar-stg.surge.sh
