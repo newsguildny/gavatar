@@ -20,4 +20,10 @@ deploy: build
 	surge public guild-avatar.surge.sh
 
 deploy-stg: build
-	surge public guild-avatar-stg.surge.sh
+	surge public guild-avatar-stg.surge.sh	
+
+deploy-ci: build
+	surge public guild-avatar.surge.sh --token ${{ secrets.SURGE_TOKEN }}
+
+deploy-ci-stg: build
+	surge public guild-avatar-stg.surge.sh --token ${{ secrets.SURGE_TOKEN }}

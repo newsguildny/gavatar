@@ -1,0 +1,16 @@
+name: deploy website
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: deploying to guild-avatar-stg.surge.sh
+    
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - run: npm install -g surge
+      - run: make deploy-ci
