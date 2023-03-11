@@ -14,7 +14,9 @@
         <button id="inp-button">upload an image</button>
         <input type="file" id="inp" />
       </div>
-      <div id="frames" class="default-frames"></div>
+      <div id="frames" class="default-frames">
+        Loading...
+      </div>
     </div>
 
     <script>
@@ -38,6 +40,11 @@
           .filter((f) => f.endsWith(".png"));
 
         return array;
+      }
+
+      async function loadFrameImages() {
+        const frameUrls = await loadImageManifest();
+        return Promise.all(frameUrls.map(loadImage));
       }
 
       function render(profilePic, framePic) {
@@ -78,15 +85,17 @@
         return imgEl;
       }
 
+      const framePicsPromise = loadFrameImages();
+      
       window.addEventListener("DOMContentLoaded", async () => {
-        const frameUrls = await loadImageManifest();
-        const framePics = await Promise.all(frameUrls.map(loadImage));
+        const framePics = await framePicsPromise;
 
         const uploadBtn = document.getElementById("inp-button");
         const frameEl = document.getElementById("frames");
         const uploadedFrameEl = document.getElementById("uploaded-frame");
 
         // render initial gallery of empty frames
+        frameEl.innerHTML = "";
         framePics.forEach((framePic) => frameEl.appendChild(framePic));
 
         uploadBtn.addEventListener("click", () => {
