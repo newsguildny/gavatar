@@ -55,6 +55,20 @@
           image.onerror = reject;
         });
 
+      async function loadImageManifest() {
+        const res = await fetch("./images.txt");
+        const text = await res.text();
+
+        // parse a line seperated text file into an
+        // array of image paths
+        const array = text
+          .split("\n")
+          .map((f) => `/${f.trim()}`)
+          .filter((f) => f.endsWith(".png"));
+
+        return array;
+      }
+
       function render(profilePic, framePic) {
         const canvas = document.createElement("canvas");
         const context = canvas.getContext("2d");
@@ -91,20 +105,6 @@
         const imgEl = document.createElement("img");
         imgEl.src = canvas.toDataURL("image/png");
         return imgEl;
-      }
-
-      async function loadImageManifest() {
-        const res = await fetch("./images.txt");
-        const text = await res.text();
-
-        // parse a line seperated text file into an
-        // array of image paths
-        const array = text
-          .split("\n")
-          .map((f) => `/${f.trim()}`)
-          .filter((f) => f.endsWith(".png"));
-
-        return array;
       }
 
       const framePromises = loadImageManifest().then((imageUrls) =>
