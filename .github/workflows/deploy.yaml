@@ -13,4 +13,6 @@ jobs:
         with:
           node-version: 16
       - run: npm install -g surge
-      - run: make deploy-ci
+      - run: make build
+      # surge public guild-avatar.surge.sh --token ${{ secrets.SURGE_TOKEN }}
+      - run: surge public guild-avatar-stg.surge.sh --token ${{ secrets.SURGE_TOKEN }}
