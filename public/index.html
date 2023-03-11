@@ -1,153 +1,149 @@
 <!DOCTYPE html>
 <html>
-
-<head>
+  <head>
     <title>Avatar Generator</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="style.css">
-</head>
+    <link rel="stylesheet" href="style.css" />
+  </head>
 
-<body>
+  <body>
     <div id="main">
-        <div class="input">
-            <div id="uploaded-frame"></div>
-            <button id="inp-button">upload an image</button>
-            <input type="file" id="inp" />
-        </div>
-        <div id="frames" class="default-frames">
-            <img src="/frames/round-1.png">
-            <img src="/frames/round-2.png">
-            <img src="/frames/round-tile-1.png">
-            <img src="/frames/round-tile-2.png">
-            <img src="/frames/round-tile-3.png">
-            <img src="/frames/round-tile-4.png">
-            <img src="/frames/square-1.png">
-            <img src="/frames/square-2.png">
-            <img src="/frames/square-tile-1.png">
-            <img src="/frames/square-tile-2.png">
-            <img src="/frames/square-tile-3.png">
-            <img src="/frames/square-tile-4.png">
-        </div>
+      <div class="input">
+        <div id="uploaded-frame"></div>
+        <button id="inp-button">upload an image</button>
+        <input type="file" id="inp" />
+      </div>
+      <div id="frames" class="default-frames">
+        <img src="/frames/round-1.png" />
+        <img src="/frames/round-2.png" />
+        <img src="/frames/round-tile-1.png" />
+        <img src="/frames/round-tile-2.png" />
+        <img src="/frames/round-tile-3.png" />
+        <img src="/frames/round-tile-4.png" />
+        <img src="/frames/square-1.png" />
+        <img src="/frames/square-2.png" />
+        <img src="/frames/square-tile-1.png" />
+        <img src="/frames/square-tile-2.png" />
+        <img src="/frames/square-tile-3.png" />
+        <img src="/frames/square-tile-4.png" />
+      </div>
     </div>
 
     <script>
-        // add more frames here as they become availible
-        const frames = [
-            "/frames/round-1.png",
-            "/frames/round-2.png",
-            "/frames/round-tile-1.png",
-            "/frames/round-tile-2.png",
-            "/frames/round-tile-3.png",
-            "/frames/round-tile-4.png",
-            "/frames/square-1.png",
-            "/frames/square-2.png",
-            "/frames/square-tile-1.png",
-            "/frames/square-tile-2.png",
-            "/frames/square-tile-3.png",
-            "/frames/square-tile-4.png",
-        ];
+      // add more frames here as they become availible
+      const frames = [
+        "/frames/round-1.png",
+        "/frames/round-2.png",
+        "/frames/round-tile-1.png",
+        "/frames/round-tile-2.png",
+        "/frames/round-tile-3.png",
+        "/frames/round-tile-4.png",
+        "/frames/square-1.png",
+        "/frames/square-2.png",
+        "/frames/square-tile-1.png",
+        "/frames/square-tile-2.png",
+        "/frames/square-tile-3.png",
+        "/frames/square-tile-4.png",
+      ];
 
-        const loadImage = (src) =>
-            new Promise((resolve, reject) => {
-                const image = new Image();
-                image.src = src;
-                image.onload = () => resolve(image);
-                image.onerror = reject;
-            });
+      const loadImage = (src) =>
+        new Promise((resolve, reject) => {
+          const image = new Image();
+          image.src = src;
+          image.onload = () => resolve(image);
+          image.onerror = reject;
+        });
 
-        function render(profilePic, framePic) {
-            const canvas = document.createElement("canvas");
-            const context = canvas.getContext("2d");
+      function render(profilePic, framePic) {
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
 
-            // the dimension of the resulting image should
-            // be somewhere between 512px and 1024px
-            const dimension = Math.min(
-                Math.max(profilePic.width, profilePic.height, 512),
-                1024
-            );
-
-            // set the the canvas to the resulting image size (a square)
-            canvas.width = dimension;
-            canvas.height = dimension;
-
-            // if the image is in landscape mode (aspectRatio > 1) it will overflow horizontally,
-            // if it's in portrait mode it will overflow vertically.
-            const aspectRatio = profilePic.width / profilePic.height;
-            const [profilePicW, profilePicH] =
-            aspectRatio > 1 ? [dimension * aspectRatio, dimension] // scale width outside dimension
-                :
-                [dimension, dimension / aspectRatio]; // scale height outside dimension
-
-            // draw the picture at the center of the canvas
-            const x = (dimension - profilePicW) / 2;
-            const y = (dimension - profilePicH) / 2;
-            context.drawImage(profilePic, x, y, profilePicW, profilePicH);
-
-            // draw frame (if there is one)
-            if (framePic) {
-                context.drawImage(framePic, 0, 0, dimension, dimension);
-            }
-
-            const imgEl = document.createElement("img");
-            imgEl.src = canvas.toDataURL("image/png");
-            return imgEl;
-        }
-
-        async function loadImageManifest() {
-            const res = await fetch('./images.txt')
-            const text = await res.text()
-            
-            // parse a line seperated text file into an
-            // array of image paths
-            const array = text
-                .split('\n')
-                .map(f => `/${f.trim()}`)
-                .filter(f => f.endsWith('.png'))
-
-            return array;
-        }
-
-        const framePromises = loadImageManifest().then((imageUrls) =>
-            imageUrls.map((url) => loadImage)
+        // the dimension of the resulting image should
+        // be somewhere between 512px and 1024px
+        const dimension = Math.min(
+          Math.max(profilePic.width, profilePic.height, 512),
+          1024
         );
 
-        const uploadBtn = document.getElementById("inp-button");
+        // set the the canvas to the resulting image size (a square)
+        canvas.width = dimension;
+        canvas.height = dimension;
 
-        uploadBtn.addEventListener('click', () => {
-            document.getElementById("inp").click()
-        })
+        // if the image is in landscape mode (aspectRatio > 1) it will overflow horizontally,
+        // if it's in portrait mode it will overflow vertically.
+        const aspectRatio = profilePic.width / profilePic.height;
+        const [profilePicW, profilePicH] =
+          aspectRatio > 1
+            ? [dimension * aspectRatio, dimension] // scale width outside dimension
+            : [dimension, dimension / aspectRatio]; // scale height outside dimension
 
-        document.getElementById("inp").onchange = async({
-            target
-        }) => {
-            try {
-                const frameEl = document.getElementById("frames");
-                const uploadedFrameEl = document.getElementById('uploaded-frame');
+        // draw the picture at the center of the canvas
+        const x = (dimension - profilePicW) / 2;
+        const y = (dimension - profilePicH) / 2;
+        context.drawImage(profilePic, x, y, profilePicW, profilePicH);
 
-                frameEl.innerHTML = "Loading...";
-                uploadedFrameEl.innerHTML = '';
+        // draw frame (if there is one)
+        if (framePic) {
+          context.drawImage(framePic, 0, 0, dimension, dimension);
+        }
 
-                const profilePicUrl = URL.createObjectURL(target.files[0]);
-                const profilePic = await loadImage(profilePicUrl);
-                                
-                uploadedFrameEl.appendChild(render(profilePic));
-                const framePics = await Promise.all(framePromises);
+        const imgEl = document.createElement("img");
+        imgEl.src = canvas.toDataURL("image/png");
+        return imgEl;
+      }
 
-                frameEl.innerHTML = "";
-                frameEl.classList.remove('default-frames');
+      async function loadImageManifest() {
+        const res = await fetch("./images.txt");
+        const text = await res.text();
 
-                // render each frame over the profile pic
-                framePics.forEach((framePic) => {
-                    const imgEl = render(profilePic, framePic);
-                    frameEl.appendChild(imgEl);
-                });
-                uploadBtn.innerText = "change photo";
-            } catch (err) {
-                console.log(err);
-            }
-        };
+        // parse a line seperated text file into an
+        // array of image paths
+        const array = text
+          .split("\n")
+          .map((f) => `/${f.trim()}`)
+          .filter((f) => f.endsWith(".png"));
+
+        return array;
+      }
+
+      const framePromises = loadImageManifest().then((imageUrls) =>
+        imageUrls.map((url) => loadImage)
+      );
+
+      const uploadBtn = document.getElementById("inp-button");
+
+      uploadBtn.addEventListener("click", () => {
+        document.getElementById("inp").click();
+      });
+
+      document.getElementById("inp").onchange = async ({ target }) => {
+        try {
+          const frameEl = document.getElementById("frames");
+          const uploadedFrameEl = document.getElementById("uploaded-frame");
+
+          frameEl.innerHTML = "Loading...";
+          uploadedFrameEl.innerHTML = "";
+
+          const profilePicUrl = URL.createObjectURL(target.files[0]);
+          const profilePic = await loadImage(profilePicUrl);
+
+          uploadedFrameEl.appendChild(render(profilePic));
+          const framePics = await Promise.all(framePromises);
+
+          frameEl.innerHTML = "";
+          frameEl.classList.remove("default-frames");
+
+          // render each frame over the profile pic
+          framePics.forEach((framePic) => {
+            const imgEl = render(profilePic, framePic);
+            frameEl.appendChild(imgEl);
+          });
+          uploadBtn.innerText = "change photo";
+        } catch (err) {
+          console.log(err);
+        }
+      };
     </script>
-</body>
-
+  </body>
 </html>
