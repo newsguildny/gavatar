@@ -4,13 +4,19 @@ guild avatar generator
 adding a frame
 --------------
 1. copy the image (png, 1024x1024px) to `public/frames`
-2. run `make build` to update the image manifest
-3. open a pr with the new image and the updated manifest
+2. run `make dev` to test the changes locally
+3. open a pr
+4. for releases, see below
 
 commands
 --------
 make dev           run local dev server
 make build         generate the image manifest
+
+releases
+--------
+- a tag prefixed with `v` will trigger a production release
+- a merge to `main` will trigger a staging release
 
 environments
 ------------

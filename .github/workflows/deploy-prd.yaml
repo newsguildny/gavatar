@@ -1,14 +1,14 @@
-name: deploy website
+name: deploy website to production
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - 'v*'
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: deploying to guild-avatar-stg.surge.sh
+    name: deploying to guild-avatar.surge.sh
     
     steps:
       - uses: actions/checkout@v3
@@ -17,4 +17,4 @@ jobs:
           node-version: 16
       - run: npm install -g surge
       - run: make build
-      - run: surge public guild-avatar-stg.surge.sh --token ${{ secrets.SURGE_TOKEN }}
+      - run: surge public guild-avatar.surge.sh --token ${{ secrets.SURGE_TOKEN }}
