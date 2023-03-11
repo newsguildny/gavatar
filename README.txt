@@ -3,7 +3,7 @@ guild avatar generator
 
 adding a frame
 --------------
-1. copy the image (png) to `public/frames`
+1. copy the image (png, 1024x1024px) to `public/frames`
 2. run `make build`
 
 commands
