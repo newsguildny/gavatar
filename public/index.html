@@ -15,38 +15,11 @@
         <input type="file" id="inp" />
       </div>
       <div id="frames" class="default-frames">
-        <img src="/frames/round-1.png" />
-        <img src="/frames/round-2.png" />
-        <img src="/frames/round-tile-1.png" />
-        <img src="/frames/round-tile-2.png" />
-        <img src="/frames/round-tile-3.png" />
-        <img src="/frames/round-tile-4.png" />
-        <img src="/frames/square-1.png" />
-        <img src="/frames/square-2.png" />
-        <img src="/frames/square-tile-1.png" />
-        <img src="/frames/square-tile-2.png" />
-        <img src="/frames/square-tile-3.png" />
-        <img src="/frames/square-tile-4.png" />
+        Loading...
       </div>
     </div>
 
     <script>
-      // add more frames here as they become availible
-      const frames = [
-        "/frames/round-1.png",
-        "/frames/round-2.png",
-        "/frames/round-tile-1.png",
-        "/frames/round-tile-2.png",
-        "/frames/round-tile-3.png",
-        "/frames/round-tile-4.png",
-        "/frames/square-1.png",
-        "/frames/square-2.png",
-        "/frames/square-tile-1.png",
-        "/frames/square-tile-2.png",
-        "/frames/square-tile-3.png",
-        "/frames/square-tile-4.png",
-      ];
-
       const loadImage = (src) =>
         new Promise((resolve, reject) => {
           const image = new Image();
@@ -54,6 +27,25 @@
           image.onload = () => resolve(image);
           image.onerror = reject;
         });
+
+      async function loadImageManifest() {
+        const res = await fetch("./images.txt");
+        const text = await res.text();
+
+        // parse a line seperated text file into an
+        // array of image paths
+        const array = text
+          .split("\n")
+          .map((f) => `/frames/${f.trim()}`)
+          .filter((f) => f.endsWith(".png"));
+
+        return array;
+      }
+
+      async function loadFrameImages() {
+        const frameUrls = await loadImageManifest();
+        return Promise.all(frameUrls.map(loadImage));
+      }
 
       function render(profilePic, framePic) {
         const canvas = document.createElement("canvas");
@@ -93,41 +85,47 @@
         return imgEl;
       }
 
-      const framePromises = frames.map(loadImage);
+      const framePicsPromise = loadFrameImages();
+      
+      window.addEventListener("DOMContentLoaded", async () => {
+        const framePics = await framePicsPromise;
 
-      const uploadBtn = document.getElementById("inp-button");
+        const uploadBtn = document.getElementById("inp-button");
+        const frameEl = document.getElementById("frames");
+        const uploadedFrameEl = document.getElementById("uploaded-frame");
 
-      uploadBtn.addEventListener("click", () => {
-        document.getElementById("inp").click();
+        // render initial gallery of empty frames
+        frameEl.innerHTML = "";
+        framePics.forEach((framePic) => frameEl.appendChild(framePic));
+
+        uploadBtn.addEventListener("click", () => {
+          document.getElementById("inp").click();
+        });
+
+        document.getElementById("inp").onchange = async ({ target }) => {
+          try {
+            frameEl.innerHTML = "Loading...";
+            uploadedFrameEl.innerHTML = "";
+
+            const profilePicUrl = URL.createObjectURL(target.files[0]);
+            const profilePic = await loadImage(profilePicUrl);
+
+            uploadedFrameEl.appendChild(render(profilePic));
+
+            frameEl.innerHTML = "";
+            frameEl.classList.remove("default-frames");
+
+            // render each frame over the profile pic
+            framePics.forEach((framePic) => {
+              const imgEl = render(profilePic, framePic);
+              frameEl.appendChild(imgEl);
+            });
+            uploadBtn.innerText = "change photo";
+          } catch (err) {
+            console.log(err);
+          }
+        };
       });
-
-      document.getElementById("inp").onchange = async ({ target }) => {
-        try {
-          const frameEl = document.getElementById("frames");
-          const uploadedFrameEl = document.getElementById("uploaded-frame");
-
-          frameEl.innerHTML = "Loading...";
-          uploadedFrameEl.innerHTML = "";
-
-          const profilePicUrl = URL.createObjectURL(target.files[0]);
-          const profilePic = await loadImage(profilePicUrl);
-
-          uploadedFrameEl.appendChild(render(profilePic));
-          const framePics = await Promise.all(framePromises);
-
-          frameEl.innerHTML = "";
-          frameEl.classList.remove("default-frames");
-
-          // render each frame over the profile pic
-          framePics.forEach((framePic) => {
-            const imgEl = render(profilePic, framePic);
-            frameEl.appendChild(imgEl);
-          });
-          uploadBtn.innerText = "change photo";
-        } catch (err) {
-          console.log(err);
-        }
-      };
     </script>
   </body>
 </html>
