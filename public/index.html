@@ -39,7 +39,7 @@
         // array of image paths
         const array = text
           .split("\n")
-          .map((f) => `/frames/${f.trim()}`)
+          .map((f) => `frames/${f.trim()}`)
           .filter((f) => f.endsWith(".png"));
 
         return array;
