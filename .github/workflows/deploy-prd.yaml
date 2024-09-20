@@ -38,12 +38,13 @@ jobs:
       pages: write
       id-token: write
 
-    steps:
-    # Step 1: Download the previously uploaded artifact
-    - name: Download Pages artifact
-      uses: actions/download-pages-artifact@v1
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
-    # Step 2: Deploy to GitHub Pages
+    steps:
     - name: Deploy to GitHub Pages
+      id: deployment
       uses: actions/deploy-pages@v2
 
