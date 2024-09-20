@@ -32,18 +32,17 @@ jobs:
   # Deploy github pages
   deploy:
     runs-on: ubuntu-latest
-    needs: build  # This ensures the deploy step only runs after the build job succeeds
+    needs: build
 
     permissions:
       pages: write
       id-token: write
 
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
-    # Step 1: Download the previously uploaded artifact
-    - name: Download Pages artifact
-      uses: actions/download-pages-artifact@v1
-
-    # Step 2: Deploy to GitHub Pages
     - name: Deploy to GitHub Pages
-      uses: actions/deploy-pages@v2
-
+      id: deployment
+      uses: actions/deploy-pages@v4
