@@ -20,8 +20,12 @@ releases
 
 environments
 ------------
-production         https://guild-avatar.surge.sh and https://newsguildny.github.io/gavatar
-staging            https://guild-avatar-stg.surge.sh   
+- production
+  https://guild-avatar.surge.sh
+  https://newsguildny.github.io/gavatar
+
+- staging
+  https://guild-avatar-stg.surge.sh   
 
 troubleshooting
 ---------------
