@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <title>Avatar Generator</title>
     <meta charset="UTF-8" />
@@ -27,6 +27,7 @@
         new Promise((resolve, reject) => {
           const image = new Image();
           image.src = src;
+          image.alt = "A frame for your avatar to show support for Times Tech Guild";
           image.onload = () => resolve(image);
           image.onerror = reject;
         });
