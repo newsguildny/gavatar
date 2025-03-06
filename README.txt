@@ -21,16 +21,12 @@ releases
 environments
 ------------
 - production
-  https://guild-avatar.surge.sh
   https://newsguildny.github.io/gavatar
-
-- staging
-  https://guild-avatar-stg.surge.sh   
 
 troubleshooting
 ---------------
-- verify the sha-1 and the timestamp at https://guild-avatar.surge.sh/version.txt
-- verify that the correct images are included in https://guild-avatar.surge.sh/images.txt
+- verify the sha-1 and the timestamp at https://newsguildny.github.io/gavatarversion.txt
+- verify that the correct images are included in https://newsguildny.github.io/gavatarimages.txt
 
 
 ෴෴෴෴෴෴෴෴෴
